@@ -30,8 +30,12 @@ const smmOrderForm = document.querySelector(".smm-order-form");
 const smmMessage = document.querySelector(".smm-message");
 const smmOrders = document.querySelector(".smm-orders");
 const smmEmpty = document.querySelector(".smm-empty");
+const siteControlForm = document.querySelector(".site-control-form");
+const controlMessage = document.querySelector(".control-message");
+const controlReset = document.querySelector(".control-reset");
 const ORDER_KEY = "sparkServiceRequests";
 const SMM_ORDER_KEY = "sparkSmmOrders";
+const SITE_SETTINGS_KEY = "sparkSiteSettings";
 const ADMIN_AUTH_KEY = "sparkAdminLoggedIn";
 const USER_AUTH_KEY = "sparkUserLoggedIn";
 const ADMIN_USER = "admin";
@@ -55,6 +59,91 @@ const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (char) => ({
   "\"": "&quot;",
   "'": "&#39;"
 }[char]));
+
+const defaultSiteSettings = {
+  heroEyebrow: "Digital Marketing Company In Ranchi Jharkhand",
+  heroLine1: "Add spark",
+  heroLine2: "to your Business",
+  heroLead: "Your trusted source for SMM, SEO, promotional services, advertising, website designing, online services, and affordable digital growth plans.",
+  promoEnabled: "yes",
+  promoTag: "Trending Service",
+  promoTitle: "Social Media Campaign",
+  promoText: "Facebook and Instagram promotion, creative posts, lead generation ads, offer campaigns, and audience targeting for your business.",
+  promoButtonText: "View Details",
+  promoButtonLink: "digital-marketing.html",
+  email: "sparkdigitalmkt1@gmail.com",
+  phone1: "+91 9113373565",
+  phone2: "+91 8227028000",
+  whatsapp: "919113373565",
+  address: "Opp Smart Bazar, Mainroad, Ranchi - 834001 Jharkhand",
+  footerTagline: "Add spark to your Business."
+};
+
+const getSiteSettings = () => ({
+  ...defaultSiteSettings,
+  ...JSON.parse(localStorage.getItem(SITE_SETTINGS_KEY) || "{}")
+});
+
+const digitsOnly = (value) => String(value || "").replace(/\D/g, "");
+
+const applySiteSettings = () => {
+  const settings = getSiteSettings();
+  const heroEyebrow = document.querySelector(".hero-copy .eyebrow");
+  const heroLine1 = document.querySelector(".hero-copy h1 span:first-child");
+  const heroLine2 = document.querySelector(".hero-copy h1 span:last-child");
+  const heroLead = document.querySelector(".hero-lead");
+  const promoPopupEl = document.querySelector(".promo-popup");
+  const promoTag = document.querySelector(".promo-tag");
+  const promoTitle = document.querySelector("#promo-title");
+  const promoText = document.querySelector(".promo-copy p:not(.promo-tag)");
+  const promoButton = document.querySelector(".promo-banner .primary-btn");
+
+  if (heroEyebrow) heroEyebrow.textContent = settings.heroEyebrow;
+  if (heroLine1) heroLine1.textContent = settings.heroLine1;
+  if (heroLine2) heroLine2.textContent = settings.heroLine2;
+  if (heroLead) heroLead.textContent = settings.heroLead;
+  if (promoTag) promoTag.textContent = settings.promoTag;
+  if (promoTitle) promoTitle.textContent = settings.promoTitle;
+  if (promoText) promoText.textContent = settings.promoText;
+  if (promoButton) {
+    promoButton.textContent = settings.promoButtonText;
+    promoButton.href = settings.promoButtonLink;
+  }
+  if (promoPopupEl && settings.promoEnabled === "no") {
+    promoPopupEl.classList.remove("is-visible");
+  }
+
+  document.querySelectorAll('a[href^="mailto:"]').forEach((link) => {
+    link.href = `mailto:${settings.email}`;
+    link.textContent = settings.email;
+  });
+
+  const phoneLinks = document.querySelectorAll('a[href^="tel:"]');
+  const phones = [settings.phone1, settings.phone2];
+  phoneLinks.forEach((link, index) => {
+    const phone = phones[index] || settings.phone1;
+    link.href = `tel:${digitsOnly(phone)}`;
+    link.textContent = phone;
+  });
+
+  document.querySelectorAll('a[href*="wa.me/"]').forEach((link) => {
+    link.href = link.href.replace(/wa\.me\/\d+/, `wa.me/${digitsOnly(settings.whatsapp)}`);
+  });
+
+  document.querySelectorAll(".whatsapp-float").forEach((link) => {
+    link.href = `https://wa.me/${digitsOnly(settings.whatsapp)}`;
+  });
+
+  document.querySelectorAll(".footer-brand p").forEach((tagline) => {
+    tagline.textContent = settings.footerTagline;
+  });
+
+  document.querySelectorAll(".site-footer div:last-of-type span").forEach((address) => {
+    address.textContent = settings.address;
+  });
+};
+
+applySiteSettings();
 
 const showSuccessPopup = (title, id, message) => {
   const popup = document.createElement("div");
@@ -238,6 +327,46 @@ logoutButtons.forEach((button) => {
     window.location.href = "login.html";
   });
 });
+
+if (siteControlForm) {
+  const fillControlForm = () => {
+    const settings = getSiteSettings();
+    Object.entries(settings).forEach(([key, value]) => {
+      const field = siteControlForm.elements[key];
+      if (field) {
+        field.value = value;
+      }
+    });
+  };
+
+  fillControlForm();
+
+  siteControlForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const formData = new FormData(siteControlForm);
+    const settings = { ...defaultSiteSettings };
+    Object.keys(settings).forEach((key) => {
+      settings[key] = String(formData.get(key) || defaultSiteSettings[key]).trim();
+    });
+    localStorage.setItem(SITE_SETTINGS_KEY, JSON.stringify(settings));
+    applySiteSettings();
+    if (controlMessage) {
+      controlMessage.textContent = "Website settings saved in this browser.";
+    }
+    showSuccessPopup("Website settings saved", "CONTROL-SAVED", "Your common website settings have been updated on this browser.");
+  });
+
+  if (controlReset) {
+    controlReset.addEventListener("click", () => {
+      localStorage.removeItem(SITE_SETTINGS_KEY);
+      fillControlForm();
+      applySiteSettings();
+      if (controlMessage) {
+        controlMessage.textContent = "Website settings reset to default.";
+      }
+    });
+  }
+}
 
 if (adminOrders || adminSmmOrders) {
   const getAdminFilters = () => ({
