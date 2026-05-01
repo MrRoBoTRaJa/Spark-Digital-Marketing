@@ -1621,7 +1621,7 @@ h2 {
 
 .admin-toolbar {
   display: grid;
-  grid-template-columns: repeat(4, minmax(130px, 1fr)) auto auto;
+  grid-template-columns: repeat(4, minmax(130px, 1fr)) auto auto auto auto;
   gap: 12px;
   align-items: end;
   padding: 18px;
@@ -1692,6 +1692,10 @@ h2 {
 .admin-clear {
   background: #ffe1e4 !important;
   color: #c1121f !important;
+}
+
+.admin-reset-btn {
+  background: #fff8dc !important;
 }
 
 .admin-table-wrap {

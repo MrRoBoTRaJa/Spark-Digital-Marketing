@@ -21,6 +21,8 @@ const adminSearch = document.querySelector(".admin-search");
 const adminSearchId = document.querySelector(".admin-search-id");
 const adminSearchName = document.querySelector(".admin-search-name");
 const adminSearchPhone = document.querySelector(".admin-search-phone");
+const adminSearchButton = document.querySelector(".admin-search-btn");
+const adminResetButton = document.querySelector(".admin-reset-btn");
 const adminExport = document.querySelector(".admin-export");
 const adminEmpty = document.querySelector(".admin-empty");
 const adminSmmEmpty = document.querySelector(".admin-smm-empty");
@@ -310,9 +312,29 @@ if (adminOrders || adminSmmOrders) {
 
   renderOrders();
 
+  if (adminSearchButton) {
+    adminSearchButton.addEventListener("click", renderOrders);
+  }
+
+  if (adminResetButton) {
+    adminResetButton.addEventListener("click", () => {
+      [adminSearch, adminSearchId, adminSearchName, adminSearchPhone].forEach((input) => {
+        if (input) {
+          input.value = "";
+        }
+      });
+      renderOrders();
+    });
+  }
+
   [adminSearch, adminSearchId, adminSearchName, adminSearchPhone].forEach((input) => {
     if (input) {
-      input.addEventListener("input", renderOrders);
+      input.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          renderOrders();
+        }
+      });
     }
   });
 
