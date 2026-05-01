@@ -1769,13 +1769,26 @@ h2 {
     top: 100%;
     right: 18px;
     left: 18px;
+    z-index: 50;
     display: grid;
     gap: 4px;
     padding: 18px;
+    color: var(--ink);
     background: var(--white);
     border: 1px solid var(--line);
     border-radius: 8px;
     box-shadow: var(--shadow);
+  }
+
+  .main-nav.is-open a {
+    display: block;
+    padding: 12px 10px;
+    color: var(--ink);
+    border-bottom: 1px solid rgba(16, 24, 39, 0.08);
+  }
+
+  .main-nav.is-open a:last-child {
+    border-bottom: 0;
   }
 
   .hero-section,
