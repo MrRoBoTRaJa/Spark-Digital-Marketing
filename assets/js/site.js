@@ -64,6 +64,65 @@ const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (char) => ({
   "'": "&#39;"
 }[char]));
 
+const defaultServiceCards = [
+  ["Website Development", "Business websites, landing pages, service pages, and responsive layouts designed to make your brand look trusted and easy to contact.", "Responsive website design\nLanding page and contact setup\nSEO-ready page structure", "Enquire Now"],
+  ["App Development", "Android app planning, design support, promotion, installs, and launch guidance for businesses that want a stronger mobile presence.", "App idea and screen planning\nUI design support\nLaunch and promotion guidance", "Enquire Now"],
+  ["Digital Marketing", "Social media marketing, paid ads, promotional campaigns, lead generation, audience research, and practical growth strategy.", "Social media campaigns\nLead generation ads\nAudience and competitor research", "Enquire Now"],
+  ["SMM Panel", "Dashboard style panel for Instagram, YouTube, Facebook, Telegram, website traffic, reseller enquiries, and quick order requests.", "Service list with pricing\nNew order request form\nSaved order history", "Open Panel"],
+  ["Website Maintenance", "Regular updates, speed checks, content changes, security basics, and technical care so your website keeps working smoothly.", "Content and image updates\nSpeed and mobile checks\nBasic backup and support", "Enquire Now"],
+  ["Graphic Design", "Post creatives, banners, ad designs, brand visuals, and campaign artwork that make your online presence more attractive.", "Social media post design\nBanner and ad creatives\nBrand and campaign artwork", "Enquire Now"],
+  ["Domain & Hosting", "Domain setup, hosting guidance, business email support, and basic website launch assistance from one place.", "Domain booking support\nHosting and SSL guidance\nBusiness email setup", "Enquire Now"],
+  ["Panels", "Custom admin panels, customer request panels, and simple dashboards for managing business work, enquiries, orders, and service updates.", "Admin and customer panels\nRequest and order tracking\nDashboard layout planning", "Enquire Now"],
+  ["Online Services", "Fast support for common online work, applications, registrations, digital forms, account setup, and customer service tasks.", "Government and private online forms\nBusiness, education, and job support\nDocument upload and digital assistance", "Enquire Now"]
+];
+
+const defaultPriceCards = [
+  ["Website", "Landing Page", "Rs. 2,999", "Single page business website with mobile friendly layout and contact buttons.", "Ask Price"],
+  ["Website", "Business Website", "Rs. 6,999", "Multi-page website for services, about, contact, gallery, and basic SEO setup.", "Ask Price"],
+  ["Panel", "Admin Panel", "Rs. 9,999", "Simple panel for enquiries, service requests, order status, and data export.", "Ask Price"],
+  ["App", "App Planning", "Rs. 4,999", "App idea planning, screen flow, launch guidance, and promotion support.", "Ask Price"],
+  ["Marketing", "Social Media Package", "Rs. 4,999/mo", "Post planning, creatives, page support, and basic promotion guidance.", "Ask Price"],
+  ["Marketing", "SEO / Local SEO", "Rs. 5,999/mo", "Keyword focus, Google Business Profile support, local ranking basics, and reports.", "Ask Price"],
+  ["SMM Panel", "Social Boost Services", "Rs. 29 / 1K", "Starting price for selected SMM services. Final rate depends on platform and quality.", "Open Panel"],
+  ["Ads", "Ad Campaign Setup", "Rs. 2,999", "Facebook, Instagram, or Google ad setup support. Ad budget is extra.", "Ask Price"],
+  ["Maintenance", "Website Maintenance", "Rs. 1,999/mo", "Content updates, small fixes, mobile checks, and basic website care.", "Ask Price"],
+  ["Design", "Social Media Post", "Rs. 199", "Single creative post design for business, festival, offer, or promotion.", "Ask Price"],
+  ["Design", "Banner / Flyer", "Rs. 499", "Promotional banner, poster, flyer, or campaign artwork design.", "Ask Price"],
+  ["Domain", "Domain & Hosting Setup", "Rs. 1,499", "Domain connection, hosting guidance, SSL basics, and launch support. Provider charges extra.", "Ask Price"],
+  ["Online", "Online Form Help", "Rs. 99", "PAN, admission, job, certificate, bill payment, document upload, and similar online support.", "Ask Price"]
+];
+
+const defaultSmmServices = [
+  ["Instagram", "Followers", "Rs. 149 / 1K", "100", "Normal"],
+  ["Instagram", "Likes", "Rs. 49 / 1K", "100", "Fast"],
+  ["Instagram", "Reel Views", "Rs. 29 / 1K", "500", "Fast"],
+  ["Instagram", "Comments", "Rs. 399 / 1K", "50", "Normal"],
+  ["YouTube", "Views", "Rs. 99 / 1K", "500", "Normal"],
+  ["YouTube", "Subscribers", "Rs. 599 / 1K", "100", "Slow"],
+  ["YouTube", "Watch Time", "Rs. 1,499 / 1K hours", "100 hours", "Slow"],
+  ["YouTube", "Likes", "Rs. 149 / 1K", "100", "Normal"],
+  ["Facebook", "Page Likes", "Rs. 249 / 1K", "100", "Normal"],
+  ["Facebook", "Post Shares", "Rs. 299 / 1K", "100", "Normal"],
+  ["Telegram", "Members", "Rs. 199 / 1K", "100", "Normal"],
+  ["X / Twitter", "Followers", "Rs. 499 / 1K", "100", "Normal"],
+  ["X / Twitter", "Retweets", "Rs. 249 / 1K", "100", "Normal"],
+  ["TikTok", "Views", "Rs. 49 / 1K", "500", "Fast"],
+  ["TikTok", "Followers", "Rs. 399 / 1K", "100", "Normal"],
+  ["LinkedIn", "Followers", "Rs. 699 / 1K", "100", "Slow"],
+  ["Pinterest", "Saves / Pins", "Rs. 199 / 1K", "100", "Normal"],
+  ["Snapchat", "Story Views", "Rs. 199 / 1K", "500", "Normal"],
+  ["Website", "Traffic", "Rs. 149 / 1K", "500", "Normal"],
+  ["Reseller", "White Label Panel", "Rs. 14,999", "1 setup", "Custom"],
+  ["Reseller", "API Access Enquiry", "Custom", "1 account", "Custom"]
+];
+
+const makeIndexedDefaults = (prefix, rows, fields) => rows.reduce((result, row, rowIndex) => {
+  fields.forEach((field, fieldIndex) => {
+    result[`${prefix}${rowIndex + 1}${field}`] = row[fieldIndex];
+  });
+  return result;
+}, {});
+
 const defaultSiteSettings = {
   heroEyebrow: "Digital Marketing Company In Ranchi Jharkhand",
   heroLine1: "Add spark",
@@ -129,7 +188,10 @@ const defaultSiteSettings = {
   graphicDesignLead: "We design clean and attractive visuals for social media, ads, banners, and business promotion.",
   domainHostingKicker: "Domain & Hosting",
   domainHostingTitle: "Setup support for your website launch.",
-  domainHostingLead: "We help with domain, hosting, SSL, business email, and basic website launch requirements."
+  domainHostingLead: "We help with domain, hosting, SSL, business email, and basic website launch requirements.",
+  ...makeIndexedDefaults("serviceCard", defaultServiceCards, ["Title", "Text", "Points", "Button"]),
+  ...makeIndexedDefaults("priceCard", defaultPriceCards, ["Tag", "Title", "Amount", "Text", "Button"]),
+  ...makeIndexedDefaults("smmService", defaultSmmServices, ["Category", "Name", "Price", "Minimum", "Delivery"])
 };
 
 const getSiteSettings = () => ({
@@ -146,6 +208,7 @@ const applySiteSettings = () => {
     const element = document.querySelector(selector);
     if (element) element.textContent = value;
   };
+  const listItemsFromText = (text) => String(text || "").split(/\r?\n/).map((item) => item.trim()).filter(Boolean);
   const pageName = (window.location.pathname.split("/").pop() || "index.html").replace(".html", "") || "index";
   const pageHeroKeys = {
     about: "about",
@@ -193,6 +256,79 @@ const applySiteSettings = () => {
     setText(".dashboard-hero .section-kicker", settings.dashboardKicker);
     setText(".dashboard-hero h1", settings.dashboardTitle);
     setText(".dashboard-hero p:not(.section-kicker)", settings.dashboardLead);
+  }
+
+  document.querySelectorAll(".service-card").forEach((card, index) => {
+    const number = index + 1;
+    setText(`#${card.id} h3`, settings[`serviceCard${number}Title`]);
+    const text = card.querySelector("p");
+    if (text) text.textContent = settings[`serviceCard${number}Text`];
+    const points = card.querySelector(".service-points");
+    if (points) {
+      points.innerHTML = listItemsFromText(settings[`serviceCard${number}Points`]).map((item) => `<li>${escapeHtml(item)}</li>`).join("");
+    }
+    const button = card.querySelector(".service-btn");
+    if (button) button.textContent = settings[`serviceCard${number}Button`];
+  });
+
+  document.querySelectorAll(".price-card").forEach((card, index) => {
+    const number = index + 1;
+    const tag = card.querySelector("span");
+    const title = card.querySelector("h3");
+    const amount = card.querySelector("strong");
+    const text = card.querySelector("p");
+    const button = card.querySelector("a");
+    if (tag) tag.textContent = settings[`priceCard${number}Tag`];
+    if (title) title.textContent = settings[`priceCard${number}Title`];
+    if (amount) amount.textContent = settings[`priceCard${number}Amount`];
+    if (text) text.textContent = settings[`priceCard${number}Text`];
+    if (button) button.textContent = settings[`priceCard${number}Button`];
+  });
+
+  document.querySelectorAll(".services-table-section tbody tr").forEach((row, index) => {
+    const number = index + 1;
+    const cells = row.querySelectorAll("td");
+    const values = [
+      settings[`smmService${number}Category`],
+      settings[`smmService${number}Name`],
+      settings[`smmService${number}Price`],
+      settings[`smmService${number}Minimum`],
+      settings[`smmService${number}Delivery`]
+    ];
+    cells.forEach((cell, cellIndex) => {
+      cell.textContent = values[cellIndex] || "";
+    });
+  });
+
+  const smmServiceSelect = document.querySelector('select[name="smmService"]');
+  if (smmServiceSelect) {
+    const selectedValue = smmServiceSelect.value;
+    const options = defaultSmmServices.map((_, index) => {
+      const number = index + 1;
+      const category = settings[`smmService${number}Category`];
+      const name = settings[`smmService${number}Name`];
+      return `${category} ${name}`.trim();
+    }).filter(Boolean);
+    smmServiceSelect.innerHTML = '<option value="">Choose service</option>' + options.map((option) =>
+      `<option>${escapeHtml(option)}</option>`
+    ).join("");
+    if (options.includes(selectedValue)) {
+      smmServiceSelect.value = selectedValue;
+    }
+  }
+
+  const smmCategorySelect = document.querySelector('select[name="smmCategory"]');
+  if (smmCategorySelect) {
+    const selectedValue = smmCategorySelect.value;
+    const categories = [...new Set(defaultSmmServices.map((_, index) =>
+      settings[`smmService${index + 1}Category`]
+    ).filter(Boolean))];
+    smmCategorySelect.innerHTML = '<option value="">Choose category</option>' + categories.map((category) =>
+      `<option>${escapeHtml(category)}</option>`
+    ).join("");
+    if (categories.includes(selectedValue)) {
+      smmCategorySelect.value = selectedValue;
+    }
   }
 
   if (promoTag) promoTag.textContent = settings.promoTag;
@@ -454,6 +590,65 @@ logoutButtons.forEach((button) => {
 });
 
 if (siteControlForm) {
+  const renderControlGroups = () => {
+    const groupTargets = {
+      serviceCards: {
+        prefix: "serviceCard",
+        rows: defaultServiceCards,
+        title: "Service",
+        fields: [
+          ["Title", "Title", "input"],
+          ["Text", "Description", "textarea"],
+          ["Points", "Points, one per line", "textarea"],
+          ["Button", "Button Text", "input"]
+        ]
+      },
+      priceCards: {
+        prefix: "priceCard",
+        rows: defaultPriceCards,
+        title: "Price",
+        fields: [
+          ["Tag", "Category", "input"],
+          ["Title", "Service Name", "input"],
+          ["Amount", "Amount", "input"],
+          ["Text", "Description", "textarea"],
+          ["Button", "Button Text", "input"]
+        ]
+      },
+      smmServices: {
+        prefix: "smmService",
+        rows: defaultSmmServices,
+        title: "SMM",
+        fields: [
+          ["Category", "Category", "input"],
+          ["Name", "Service", "input"],
+          ["Price", "Start Price", "input"],
+          ["Minimum", "Minimum", "input"],
+          ["Delivery", "Delivery", "input"]
+        ]
+      }
+    };
+
+    document.querySelectorAll("[data-control-group]").forEach((target) => {
+      const config = groupTargets[target.dataset.controlGroup];
+      if (!config || target.children.length) {
+        return;
+      }
+      target.innerHTML = config.rows.map((row, index) => {
+        const number = index + 1;
+        const title = row[0] || `${config.title} ${number}`;
+        const fields = config.fields.map(([key, label, type]) => {
+          const name = `${config.prefix}${number}${key}`;
+          const input = type === "textarea"
+            ? `<textarea name="${name}"></textarea>`
+            : `<input name="${name}" type="text">`;
+          return `<label><span>${label}</span>${input}</label>`;
+        }).join("");
+        return `<div class="control-page-block control-edit-grid"><h3>${escapeHtml(config.title)} ${number}<small>${escapeHtml(title)}</small></h3>${fields}</div>`;
+      }).join("");
+    });
+  };
+
   const fillControlForm = () => {
     const settings = getSiteSettings();
     Object.entries(settings).forEach(([key, value]) => {
@@ -464,6 +659,7 @@ if (siteControlForm) {
     });
   };
 
+  renderControlGroups();
   fillControlForm();
 
   siteControlForm.addEventListener("submit", (event) => {
