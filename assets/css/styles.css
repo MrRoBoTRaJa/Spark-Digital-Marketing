@@ -1363,6 +1363,21 @@ h2 {
   cursor: pointer;
 }
 
+.admin-panel-block {
+  display: grid;
+  gap: 12px;
+}
+
+.admin-section-head {
+  display: grid;
+  gap: 4px;
+}
+
+.admin-section-head h2 {
+  margin: 0;
+  font-size: clamp(1.3rem, 2vw, 1.9rem);
+}
+
 .admin-clear {
   background: #ffe1e4 !important;
   color: #c1121f !important;
