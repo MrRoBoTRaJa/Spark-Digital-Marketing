@@ -879,6 +879,10 @@ h2 {
   background: #fffdf2;
 }
 
+.dashboard-shell.is-locked {
+  display: none;
+}
+
 .dashboard-sidebar {
   position: sticky;
   top: 72px;
@@ -909,6 +913,18 @@ h2 {
 .dashboard-sidebar a:hover {
   color: var(--ink);
   background: var(--orange);
+}
+
+.auth-logout {
+  min-height: 40px;
+  margin-top: 10px;
+  padding: 0 12px;
+  color: #c1121f;
+  font-weight: 900;
+  background: #ffe1e4;
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
 }
 
 .dashboard-main {
@@ -1472,6 +1488,70 @@ h2 {
   margin: 0;
   color: #c1121f;
   font-weight: 800;
+}
+
+.user-login-message {
+  min-height: 22px;
+  margin: 0;
+  color: #c1121f;
+  font-weight: 800;
+}
+
+.auth-page-section {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  padding: clamp(42px, 6vw, 72px) clamp(16px, 4vw, 48px);
+  background: #fffdf2;
+}
+
+.site-login-card {
+  display: grid;
+  gap: 14px;
+  padding: 26px;
+  background: var(--white);
+  border: 1px solid rgba(248, 195, 0, 0.28);
+  border-radius: 8px;
+  box-shadow: 0 18px 42px rgba(16, 24, 39, 0.08);
+}
+
+.site-login-card h2 {
+  margin: 0;
+  font-size: clamp(1.5rem, 2.6vw, 2.2rem);
+}
+
+.site-login-card p:not(.section-kicker):not(.admin-login-message):not(.user-login-message) {
+  margin: 0;
+  color: var(--muted);
+}
+
+.site-login-card label {
+  display: grid;
+  gap: 7px;
+  color: #202938;
+  font-size: 0.86rem;
+  font-weight: 900;
+}
+
+.site-login-card input {
+  min-height: 44px;
+  padding: 0 12px;
+  color: var(--ink);
+  font: inherit;
+  background: #fffdf2;
+  border: 1px solid rgba(16, 24, 39, 0.16);
+  border-radius: 8px;
+  outline: 0;
+}
+
+.site-login-card button {
+  min-height: 44px;
+  color: var(--ink);
+  font-weight: 900;
+  background: var(--orange);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
 }
 
 .admin-toolbar {
@@ -2090,6 +2170,7 @@ h2 {
   .service-grid,
   .pricing-grid,
   .dashboard-stats,
+  .auth-page-section,
   .smm-order-form,
   .detail-grid,
   .purchase-layout,

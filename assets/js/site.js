@@ -12,6 +12,11 @@ const adminLoginSection = document.querySelector(".admin-login-section");
 const adminLoginForm = document.querySelector(".admin-login-form");
 const adminLoginMessage = document.querySelector(".admin-login-message");
 const adminSection = document.querySelector(".admin-section");
+const userLoginSection = document.querySelector(".user-login-section");
+const userLoginForm = document.querySelector(".user-login-form");
+const userLoginMessage = document.querySelector(".user-login-message");
+const dashboardShell = document.querySelector(".dashboard-shell");
+const logoutButtons = document.querySelectorAll(".auth-logout");
 const adminSearch = document.querySelector(".admin-search");
 const adminExport = document.querySelector(".admin-export");
 const adminEmpty = document.querySelector(".admin-empty");
@@ -23,8 +28,11 @@ const smmEmpty = document.querySelector(".smm-empty");
 const ORDER_KEY = "sparkServiceRequests";
 const SMM_ORDER_KEY = "sparkSmmOrders";
 const ADMIN_AUTH_KEY = "sparkAdminLoggedIn";
+const USER_AUTH_KEY = "sparkUserLoggedIn";
 const ADMIN_USER = "admin";
 const ADMIN_PASSWORD = "Spark@123";
+const USER_ID = "user";
+const USER_PASSWORD = "User@123";
 const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (char) => ({
   "&": "&amp;",
   "<": "&lt;",
@@ -117,6 +125,16 @@ const unlockAdmin = () => {
   }
 };
 
+const unlockDashboard = () => {
+  if (userLoginSection) {
+    userLoginSection.classList.add("is-hidden");
+  }
+
+  if (dashboardShell) {
+    dashboardShell.classList.remove("is-locked");
+  }
+};
+
 if (adminLoginForm && adminLoginMessage) {
   if (sessionStorage.getItem(ADMIN_AUTH_KEY) === "true") {
     unlockAdmin();
@@ -133,12 +151,51 @@ if (adminLoginForm && adminLoginMessage) {
       adminLoginMessage.textContent = "";
       adminLoginForm.reset();
       unlockAdmin();
+      const target = adminLoginForm.dataset.loginTarget;
+      if (target) {
+        window.location.href = target;
+      }
       return;
     }
 
     adminLoginMessage.textContent = "Wrong user ID or password.";
   });
 }
+
+if (userLoginForm && userLoginMessage) {
+  if (sessionStorage.getItem(USER_AUTH_KEY) === "true" || sessionStorage.getItem(ADMIN_AUTH_KEY) === "true") {
+    unlockDashboard();
+  }
+
+  userLoginForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const formData = new FormData(userLoginForm);
+    const user = String(formData.get("userId") || "").trim();
+    const password = String(formData.get("userPassword") || "");
+
+    if (user === USER_ID && password === USER_PASSWORD) {
+      sessionStorage.setItem(USER_AUTH_KEY, "true");
+      userLoginMessage.textContent = "";
+      userLoginForm.reset();
+      unlockDashboard();
+      const target = userLoginForm.dataset.loginTarget;
+      if (target) {
+        window.location.href = target;
+      }
+      return;
+    }
+
+    userLoginMessage.textContent = "Wrong user ID or password.";
+  });
+}
+
+logoutButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    sessionStorage.removeItem(ADMIN_AUTH_KEY);
+    sessionStorage.removeItem(USER_AUTH_KEY);
+    window.location.href = "login.html";
+  });
+});
 
 if (adminOrders || adminSmmOrders) {
   const renderOrders = (filter = "") => {
