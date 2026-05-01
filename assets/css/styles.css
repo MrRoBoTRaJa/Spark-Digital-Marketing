@@ -1067,6 +1067,31 @@ h2 {
   overflow: hidden;
 }
 
+.admin-forward-card {
+  display: grid;
+  gap: 12px;
+  padding: 24px;
+  color: var(--white);
+  background: linear-gradient(135deg, #050505, #1e1a05 70%);
+  border: 1px solid rgba(248, 195, 0, 0.28);
+  border-radius: 8px;
+}
+
+.admin-forward-card .section-kicker {
+  color: var(--orange);
+}
+
+.admin-forward-card h2 {
+  margin: 0;
+  font-size: clamp(1.45rem, 2.8vw, 2.4rem);
+}
+
+.admin-forward-card p:not(.section-kicker) {
+  max-width: 680px;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.74);
+}
+
 .online-services-panel {
   margin-top: 46px;
   padding: clamp(22px, 3vw, 32px);
