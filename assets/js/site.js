@@ -65,15 +65,15 @@ const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (char) => ({
 }[char]));
 
 const defaultServiceCards = [
-  ["Website Development", "Business websites, landing pages, service pages, and responsive layouts designed to make your brand look trusted and easy to contact.", "Responsive website design\nLanding page and contact setup\nSEO-ready page structure", "Enquire Now"],
-  ["App Development", "Android app planning, design support, promotion, installs, and launch guidance for businesses that want a stronger mobile presence.", "App idea and screen planning\nUI design support\nLaunch and promotion guidance", "Enquire Now"],
-  ["Digital Marketing", "Social media marketing, paid ads, promotional campaigns, lead generation, audience research, and practical growth strategy.", "Social media campaigns\nLead generation ads\nAudience and competitor research", "Enquire Now"],
-  ["SMM Panel", "Dashboard style panel for Instagram, YouTube, Facebook, Telegram, website traffic, reseller enquiries, and quick order requests.", "Service list with pricing\nNew order request form\nSaved order history", "Open Panel"],
-  ["Website Maintenance", "Regular updates, speed checks, content changes, security basics, and technical care so your website keeps working smoothly.", "Content and image updates\nSpeed and mobile checks\nBasic backup and support", "Enquire Now"],
-  ["Graphic Design", "Post creatives, banners, ad designs, brand visuals, and campaign artwork that make your online presence more attractive.", "Social media post design\nBanner and ad creatives\nBrand and campaign artwork", "Enquire Now"],
-  ["Domain & Hosting", "Domain setup, hosting guidance, business email support, and basic website launch assistance from one place.", "Domain booking support\nHosting and SSL guidance\nBusiness email setup", "Enquire Now"],
-  ["Panels", "Custom admin panels, customer request panels, and simple dashboards for managing business work, enquiries, orders, and service updates.", "Admin and customer panels\nRequest and order tracking\nDashboard layout planning", "Enquire Now"],
-  ["Online Services", "Fast support for common online work, applications, registrations, digital forms, account setup, and customer service tasks.", "Government and private online forms\nBusiness, education, and job support\nDocument upload and digital assistance", "Enquire Now"]
+  ["Website Development", "Starting Rs. 2,999", "Business websites, landing pages, service pages, and responsive layouts designed to make your brand look trusted and easy to contact.", "Responsive website design\nLanding page and contact setup\nSEO-ready page structure", "Enquire Now"],
+  ["App Development", "Starting Rs. 4,999", "Android app planning, design support, promotion, installs, and launch guidance for businesses that want a stronger mobile presence.", "App idea and screen planning\nUI design support\nLaunch and promotion guidance", "Enquire Now"],
+  ["Digital Marketing", "Starting Rs. 2,999", "Social media marketing, paid ads, promotional campaigns, lead generation, audience research, and practical growth strategy.", "Social media campaigns\nLead generation ads\nAudience and competitor research", "Enquire Now"],
+  ["SMM Panel", "Starting Rs. 29 / 1K", "Dashboard style panel for Instagram, YouTube, Facebook, Telegram, website traffic, reseller enquiries, and quick order requests.", "Service list with pricing\nNew order request form\nSaved order history", "Open Panel"],
+  ["Website Maintenance", "Starting Rs. 1,999/mo", "Regular updates, speed checks, content changes, security basics, and technical care so your website keeps working smoothly.", "Content and image updates\nSpeed and mobile checks\nBasic backup and support", "Enquire Now"],
+  ["Graphic Design", "Starting Rs. 199", "Post creatives, banners, ad designs, brand visuals, and campaign artwork that make your online presence more attractive.", "Social media post design\nBanner and ad creatives\nBrand and campaign artwork", "Enquire Now"],
+  ["Domain & Hosting", "Starting Rs. 1,499", "Domain setup, hosting guidance, business email support, and basic website launch assistance from one place.", "Domain booking support\nHosting and SSL guidance\nBusiness email setup", "Enquire Now"],
+  ["Panels", "Starting Rs. 9,999", "Custom admin panels, customer request panels, and simple dashboards for managing business work, enquiries, orders, and service updates.", "Admin and customer panels\nRequest and order tracking\nDashboard layout planning", "Enquire Now"],
+  ["Online Services", "Starting Rs. 99", "Fast support for common online work, applications, registrations, digital forms, account setup, and customer service tasks.", "Government and private online forms\nBusiness, education, and job support\nDocument upload and digital assistance", "Enquire Now"]
 ];
 
 const defaultPriceCards = [
@@ -189,7 +189,7 @@ const defaultSiteSettings = {
   domainHostingKicker: "Domain & Hosting",
   domainHostingTitle: "Setup support for your website launch.",
   domainHostingLead: "We help with domain, hosting, SSL, business email, and basic website launch requirements.",
-  ...makeIndexedDefaults("serviceCard", defaultServiceCards, ["Title", "Text", "Points", "Button"]),
+  ...makeIndexedDefaults("serviceCard", defaultServiceCards, ["Title", "Amount", "Text", "Points", "Button"]),
   ...makeIndexedDefaults("priceCard", defaultPriceCards, ["Tag", "Title", "Amount", "Text", "Button"]),
   ...makeIndexedDefaults("smmService", defaultSmmServices, ["Category", "Name", "Price", "Minimum", "Delivery"])
 };
@@ -261,6 +261,16 @@ const applySiteSettings = () => {
   document.querySelectorAll(".service-card").forEach((card, index) => {
     const number = index + 1;
     setText(`#${card.id} h3`, settings[`serviceCard${number}Title`]);
+    let amount = card.querySelector(".service-amount");
+    if (!amount) {
+      amount = document.createElement("strong");
+      amount.className = "service-amount";
+      const title = card.querySelector("h3");
+      if (title) {
+        title.insertAdjacentElement("afterend", amount);
+      }
+    }
+    if (amount) amount.textContent = settings[`serviceCard${number}Amount`];
     const text = card.querySelector("p");
     if (text) text.textContent = settings[`serviceCard${number}Text`];
     const points = card.querySelector(".service-points");
@@ -598,6 +608,7 @@ if (siteControlForm) {
         title: "Service",
         fields: [
           ["Title", "Title", "input"],
+          ["Amount", "Amount", "input"],
           ["Text", "Description", "textarea"],
           ["Points", "Points, one per line", "textarea"],
           ["Button", "Button Text", "input"]
