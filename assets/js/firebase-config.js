@@ -4,13 +4,13 @@
 // 3. Add a Web app in Firebase and paste its config below.
 // 4. Set enabled to true.
 export const firebaseSettings = {
-  enabled: false,
+  enabled: true,
   config: {
-    apiKey: "PASTE_FIREBASE_API_KEY",
-    authDomain: "PASTE_PROJECT_ID.firebaseapp.com",
-    projectId: "PASTE_PROJECT_ID",
-    storageBucket: "PASTE_PROJECT_ID.firebasestorage.app",
-    messagingSenderId: "PASTE_SENDER_ID",
-    appId: "PASTE_APP_ID"
+    apiKey: "AIzaSyAasq5YCPOXO9-4Cns-JZtvjIRBIY4QVSA",
+    authDomain: "spark-digital-marketing-64cd0.firebaseapp.com",
+    projectId: "spark-digital-marketing-64cd0",
+    storageBucket: "spark-digital-marketing-64cd0.firebasestorage.app",
+    messagingSenderId: "597286483321",
+    appId: "1:597286483321:web:c8d7616378993ec711aba8"
   }
 };
