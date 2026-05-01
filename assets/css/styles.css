@@ -383,6 +383,71 @@ a {
   border-radius: 8px;
 }
 
+.success-popup {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  background: rgba(0, 0, 0, 0.68);
+}
+
+.success-popup.is-visible {
+  display: flex;
+}
+
+.success-card {
+  position: relative;
+  display: grid;
+  gap: 12px;
+  width: min(100%, 440px);
+  padding: 28px;
+  text-align: center;
+  background: var(--white);
+  border: 1px solid rgba(248, 195, 0, 0.34);
+  border-radius: 8px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.42);
+}
+
+.success-card h2 {
+  margin: 0;
+  font-size: clamp(1.5rem, 2.8vw, 2.25rem);
+}
+
+.success-card p:not(.section-kicker) {
+  margin: 0;
+  color: var(--muted);
+}
+
+.success-card strong {
+  display: block;
+  padding: 12px;
+  color: #c1121f;
+  font-size: 1.2rem;
+  background: #fff8dc;
+  border: 1px dashed rgba(193, 18, 31, 0.28);
+  border-radius: 8px;
+}
+
+.success-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  color: #c1121f;
+  font-size: 1.4rem;
+  line-height: 1;
+  background: #fff8dc;
+  border: 1px solid rgba(193, 18, 31, 0.22);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
 .hero-section {
   position: relative;
   display: grid;

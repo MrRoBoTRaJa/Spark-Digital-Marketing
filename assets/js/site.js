@@ -33,6 +33,16 @@ const ADMIN_USER = "admin";
 const ADMIN_PASSWORD = "Spark@123";
 const USER_ID = "user";
 const USER_PASSWORD = "User@123";
+const makeRequestId = (prefix) => {
+  const date = new Date();
+  const stamp = [
+    date.getFullYear(),
+    String(date.getMonth() + 1).padStart(2, "0"),
+    String(date.getDate()).padStart(2, "0")
+  ].join("");
+  const random = Math.random().toString(36).slice(2, 6).toUpperCase();
+  return `${prefix}-${stamp}-${Date.now().toString().slice(-5)}${random}`;
+};
 const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (char) => ({
   "&": "&amp;",
   "<": "&lt;",
@@ -40,6 +50,31 @@ const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (char) => ({
   "\"": "&quot;",
   "'": "&#39;"
 }[char]));
+
+const showSuccessPopup = (title, id, message) => {
+  const popup = document.createElement("div");
+  popup.className = "success-popup is-visible";
+  popup.innerHTML = `
+    <div class="success-card" role="dialog" aria-modal="true" aria-labelledby="success-title">
+      <button class="success-close" type="button" aria-label="Close success message">&times;</button>
+      <p class="section-kicker">Submitted</p>
+      <h2 id="success-title">${escapeHtml(title)}</h2>
+      <p>${escapeHtml(message)}</p>
+      <strong>${escapeHtml(id)}</strong>
+      <button class="primary-btn success-ok" type="button">OK</button>
+    </div>
+  `;
+  document.body.appendChild(popup);
+
+  const closePopup = () => popup.remove();
+  popup.querySelector(".success-close").addEventListener("click", closePopup);
+  popup.querySelector(".success-ok").addEventListener("click", closePopup);
+  popup.addEventListener("click", (event) => {
+    if (event.target === popup) {
+      closePopup();
+    }
+  });
+};
 
 if (menuButton && mainNav) {
   menuButton.addEventListener("click", () => {
@@ -93,8 +128,9 @@ if (purchaseForm && purchaseMessage) {
     event.preventDefault();
     const formData = new FormData(purchaseForm);
     const orders = JSON.parse(localStorage.getItem(ORDER_KEY) || "[]");
+    const requestId = makeRequestId("REQ");
     const order = {
-      id: Date.now(),
+      id: requestId,
       date: new Date().toLocaleString(),
       name: formData.get("customerName"),
       phone: formData.get("customerPhone"),
@@ -107,8 +143,9 @@ if (purchaseForm && purchaseMessage) {
 
     orders.unshift(order);
     localStorage.setItem(ORDER_KEY, JSON.stringify(orders));
-    purchaseMessage.textContent = "Request saved. You can view it in Admin Console.";
+    purchaseMessage.textContent = `Request saved. Your request ID is ${requestId}.`;
     purchaseForm.reset();
+    showSuccessPopup("Thank you for your request", requestId, "Your request has been saved. Keep this ID for follow-up.");
   });
 }
 
@@ -210,6 +247,7 @@ if (adminOrders || adminSmmOrders) {
     if (adminOrders) {
       adminOrders.innerHTML = orders.map((order) => `
         <tr>
+          <td>${escapeHtml(order.id || "Old request")}</td>
           <td>${escapeHtml(order.date)}</td>
           <td>${escapeHtml(order.name)}</td>
           <td>${escapeHtml(order.phone)}</td>
@@ -225,6 +263,7 @@ if (adminOrders || adminSmmOrders) {
     if (adminSmmOrders) {
       adminSmmOrders.innerHTML = smmAdminOrders.map((order) => `
         <tr>
+          <td>${escapeHtml(order.id || "Old order")}</td>
           <td>${escapeHtml(order.date)}</td>
           <td>${escapeHtml(order.name)}</td>
           <td>${escapeHtml(order.phone)}</td>
@@ -257,10 +296,11 @@ if (adminOrders || adminSmmOrders) {
     adminExport.addEventListener("click", () => {
       const orders = getServiceOrders();
       const smmAdminOrders = getSmmOrders();
-      const serviceHeaders = ["Type", "Date", "Name", "Mobile", "Service", "Documents", "Payment Method", "Payment Status", "Details"];
-      const smmHeaders = ["Type", "Date", "Name", "Mobile", "Category", "Service", "Quantity", "Payment", "Link", "Notes"];
+      const serviceHeaders = ["Type", "Request ID", "Date", "Name", "Mobile", "Service", "Documents", "Payment Method", "Payment Status", "Details"];
+      const smmHeaders = ["Type", "Order ID", "Date", "Name", "Mobile", "Category", "Service", "Quantity", "Payment", "Link", "Notes"];
       const serviceRows = orders.map((order) => [
         "Online Service",
+        order.id || "Old request",
         order.date,
         order.name,
         order.phone,
@@ -272,6 +312,7 @@ if (adminOrders || adminSmmOrders) {
       ]);
       const smmRows = smmAdminOrders.map((order) => [
         "SMM Panel",
+        order.id || "Old order",
         order.date,
         order.name,
         order.phone,
@@ -301,8 +342,9 @@ if (smmOrderForm && smmMessage) {
     event.preventDefault();
     const formData = new FormData(smmOrderForm);
     const orders = JSON.parse(localStorage.getItem(SMM_ORDER_KEY) || "[]");
+    const orderId = makeRequestId("SMM");
     const order = {
-      id: Date.now(),
+      id: orderId,
       date: new Date().toLocaleString(),
       name: formData.get("smmName"),
       phone: formData.get("smmPhone"),
@@ -316,8 +358,9 @@ if (smmOrderForm && smmMessage) {
 
     orders.unshift(order);
     localStorage.setItem(SMM_ORDER_KEY, JSON.stringify(orders));
-    smmMessage.textContent = "SMM order saved. Send payment screenshot and order details on WhatsApp.";
+    smmMessage.textContent = `SMM order saved. Your order ID is ${orderId}.`;
     smmOrderForm.reset();
+    showSuccessPopup("Thank you for your order", orderId, "Your SMM order has been saved. Keep this ID for follow-up.");
     renderSmmOrders();
   });
 }
@@ -330,6 +373,7 @@ const renderSmmOrders = () => {
   const orders = JSON.parse(localStorage.getItem(SMM_ORDER_KEY) || "[]");
   smmOrders.innerHTML = orders.map((order) => `
     <tr>
+      <td>${escapeHtml(order.id || "Old order")}</td>
       <td>${escapeHtml(order.date)}</td>
       <td>${escapeHtml(order.name)}</td>
       <td>${escapeHtml(order.phone)}</td>
