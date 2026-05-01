@@ -10,7 +10,6 @@ const adminOrders = document.querySelector(".admin-orders");
 const adminSmmOrders = document.querySelector(".admin-smm-orders");
 const adminSearch = document.querySelector(".admin-search");
 const adminExport = document.querySelector(".admin-export");
-const adminClear = document.querySelector(".admin-clear");
 const adminEmpty = document.querySelector(".admin-empty");
 const adminSmmEmpty = document.querySelector(".admin-smm-empty");
 const smmOrderForm = document.querySelector(".smm-order-form");
@@ -198,15 +197,6 @@ if (adminOrders || adminSmmOrders) {
     });
   }
 
-  if (adminClear) {
-    adminClear.addEventListener("click", () => {
-      if (confirm("Clear all saved service and SMM panel requests?")) {
-        localStorage.removeItem(ORDER_KEY);
-        localStorage.removeItem(SMM_ORDER_KEY);
-        renderOrders();
-      }
-    });
-  }
 }
 
 if (smmOrderForm && smmMessage) {
