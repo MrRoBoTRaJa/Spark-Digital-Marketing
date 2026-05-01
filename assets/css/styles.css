@@ -87,6 +87,7 @@ a {
 
 .main-nav {
   display: flex;
+  align-items: center;
   justify-content: center;
   gap: clamp(14px, 2.4vw, 28px);
   color: rgba(255, 255, 255, 0.86);
@@ -120,6 +121,22 @@ a {
 
 .nav-group {
   position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.nav-group > a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.nav-arrow {
+  display: inline-block;
+  color: var(--orange);
+  font-size: 0.72rem;
+  line-height: 1;
+  transform: translateY(1px);
 }
 
 .nav-submenu {
@@ -1840,6 +1857,11 @@ h2 {
   .main-nav.is-open .nav-group {
     display: grid;
     gap: 4px;
+  }
+
+  .main-nav.is-open .nav-group > a {
+    display: flex;
+    justify-content: space-between;
   }
 
   .main-nav.is-open .nav-submenu {
