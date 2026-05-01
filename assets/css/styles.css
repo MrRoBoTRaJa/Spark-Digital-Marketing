@@ -1417,6 +1417,13 @@ h2 {
   font-size: clamp(1.3rem, 2vw, 1.9rem);
 }
 
+.admin-actions-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
 .admin-clear {
   background: #ffe1e4 !important;
   color: #c1121f !important;
