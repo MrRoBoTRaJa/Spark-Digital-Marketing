@@ -8,6 +8,10 @@ const purchaseForm = document.querySelector(".purchase-form");
 const purchaseMessage = document.querySelector(".purchase-message");
 const adminOrders = document.querySelector(".admin-orders");
 const adminSmmOrders = document.querySelector(".admin-smm-orders");
+const adminLoginSection = document.querySelector(".admin-login-section");
+const adminLoginForm = document.querySelector(".admin-login-form");
+const adminLoginMessage = document.querySelector(".admin-login-message");
+const adminSection = document.querySelector(".admin-section");
 const adminSearch = document.querySelector(".admin-search");
 const adminExport = document.querySelector(".admin-export");
 const adminEmpty = document.querySelector(".admin-empty");
@@ -18,6 +22,9 @@ const smmOrders = document.querySelector(".smm-orders");
 const smmEmpty = document.querySelector(".smm-empty");
 const ORDER_KEY = "sparkServiceRequests";
 const SMM_ORDER_KEY = "sparkSmmOrders";
+const ADMIN_AUTH_KEY = "sparkAdminLoggedIn";
+const ADMIN_USER = "admin";
+const ADMIN_PASSWORD = "Spark@123";
 const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (char) => ({
   "&": "&amp;",
   "<": "&lt;",
@@ -99,6 +106,39 @@ if (purchaseForm && purchaseMessage) {
 
 const getServiceOrders = () => JSON.parse(localStorage.getItem(ORDER_KEY) || "[]");
 const getSmmOrders = () => JSON.parse(localStorage.getItem(SMM_ORDER_KEY) || "[]");
+
+const unlockAdmin = () => {
+  if (adminLoginSection) {
+    adminLoginSection.classList.add("is-hidden");
+  }
+
+  if (adminSection) {
+    adminSection.classList.remove("is-locked");
+  }
+};
+
+if (adminLoginForm && adminLoginMessage) {
+  if (sessionStorage.getItem(ADMIN_AUTH_KEY) === "true") {
+    unlockAdmin();
+  }
+
+  adminLoginForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const formData = new FormData(adminLoginForm);
+    const user = String(formData.get("adminUser") || "").trim();
+    const password = String(formData.get("adminPassword") || "");
+
+    if (user === ADMIN_USER && password === ADMIN_PASSWORD) {
+      sessionStorage.setItem(ADMIN_AUTH_KEY, "true");
+      adminLoginMessage.textContent = "";
+      adminLoginForm.reset();
+      unlockAdmin();
+      return;
+    }
+
+    adminLoginMessage.textContent = "Wrong user ID or password.";
+  });
+}
 
 if (adminOrders || adminSmmOrders) {
   const renderOrders = (filter = "") => {
