@@ -193,6 +193,24 @@ a {
   cursor: pointer;
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.login-top-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 0 18px;
+  color: var(--white);
+  font-weight: 900;
+  border: 1px solid rgba(248, 195, 0, 0.42);
+  border-radius: 999px;
+}
+
 .secondary-btn {
   display: inline-flex;
   align-items: center;
@@ -2072,6 +2090,7 @@ h2 {
   }
 
   .main-nav,
+  .header-actions,
   .talk-btn {
     display: none;
   }
