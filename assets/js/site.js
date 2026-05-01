@@ -42,6 +42,10 @@ const ADMIN_USER = "admin";
 const ADMIN_PASSWORD = "Spark@123";
 const USER_ID = "user";
 const USER_PASSWORD = "User@123";
+const sparkDbReady = import("./firebase-db.js").then((module) => module.sparkDB).catch(() => null);
+let remoteServiceOrders = [];
+let remoteSmmOrders = [];
+let remoteSiteSettings = {};
 const makeRequestId = (prefix) => {
   const date = new Date();
   const stamp = [
@@ -81,6 +85,7 @@ const defaultSiteSettings = {
 
 const getSiteSettings = () => ({
   ...defaultSiteSettings,
+  ...remoteSiteSettings,
   ...JSON.parse(localStorage.getItem(SITE_SETTINGS_KEY) || "{}")
 });
 
@@ -144,6 +149,27 @@ const applySiteSettings = () => {
 };
 
 applySiteSettings();
+
+sparkDbReady.then(async (db) => {
+  if (!db?.enabled) {
+    return;
+  }
+  try {
+    const settings = await db.getSiteSettings();
+    if (settings) {
+      remoteSiteSettings = settings;
+      applySiteSettings();
+      if (siteControlForm) {
+        Object.entries(getSiteSettings()).forEach(([key, value]) => {
+          const field = siteControlForm.elements[key];
+          if (field) field.value = value;
+        });
+      }
+    }
+  } catch (error) {
+    console.warn("Firebase settings unavailable", error);
+  }
+});
 
 const showSuccessPopup = (title, id, message) => {
   const popup = document.createElement("div");
@@ -237,14 +263,25 @@ if (purchaseForm && purchaseMessage) {
 
     orders.unshift(order);
     localStorage.setItem(ORDER_KEY, JSON.stringify(orders));
+    sparkDbReady.then((db) => db?.saveServiceRequest(order)).catch(() => {});
     purchaseMessage.textContent = `Request saved. Your request ID is ${requestId}.`;
     purchaseForm.reset();
     showSuccessPopup("Thank you for your request", requestId, "Your request has been saved. Keep this ID for follow-up.");
   });
 }
 
-const getServiceOrders = () => JSON.parse(localStorage.getItem(ORDER_KEY) || "[]");
-const getSmmOrders = () => JSON.parse(localStorage.getItem(SMM_ORDER_KEY) || "[]");
+const mergeById = (localRows, remoteRows) => {
+  const merged = new Map();
+  [...remoteRows, ...localRows].forEach((row) => {
+    if (row?.id) {
+      merged.set(row.id, row);
+    }
+  });
+  return [...merged.values()];
+};
+
+const getServiceOrders = () => mergeById(JSON.parse(localStorage.getItem(ORDER_KEY) || "[]"), remoteServiceOrders);
+const getSmmOrders = () => mergeById(JSON.parse(localStorage.getItem(SMM_ORDER_KEY) || "[]"), remoteSmmOrders);
 
 const unlockAdmin = () => {
   if (adminLoginSection) {
@@ -349,6 +386,7 @@ if (siteControlForm) {
       settings[key] = String(formData.get(key) || defaultSiteSettings[key]).trim();
     });
     localStorage.setItem(SITE_SETTINGS_KEY, JSON.stringify(settings));
+    sparkDbReady.then((db) => db?.saveSiteSettings(settings)).catch(() => {});
     applySiteSettings();
     if (controlMessage) {
       controlMessage.textContent = "Website settings saved in this browser.";
@@ -440,6 +478,23 @@ if (adminOrders || adminSmmOrders) {
   };
 
   renderOrders();
+
+  sparkDbReady.then(async (db) => {
+    if (!db?.enabled) {
+      return;
+    }
+    try {
+      const [serviceRows, smmRows] = await Promise.all([
+        db.getServiceRequests(),
+        db.getSmmOrders()
+      ]);
+      remoteServiceOrders = serviceRows;
+      remoteSmmOrders = smmRows;
+      renderOrders();
+    } catch (error) {
+      console.warn("Firebase orders unavailable", error);
+    }
+  });
 
   if (adminSearchButton) {
     adminSearchButton.addEventListener("click", renderOrders);
@@ -533,6 +588,7 @@ if (smmOrderForm && smmMessage) {
 
     orders.unshift(order);
     localStorage.setItem(SMM_ORDER_KEY, JSON.stringify(orders));
+    sparkDbReady.then((db) => db?.saveSmmOrder(order)).catch(() => {});
     smmMessage.textContent = `SMM order saved. Your order ID is ${orderId}.`;
     smmOrderForm.reset();
     showSuccessPopup("Thank you for your order", orderId, "Your SMM order has been saved. Keep this ID for follow-up.");
