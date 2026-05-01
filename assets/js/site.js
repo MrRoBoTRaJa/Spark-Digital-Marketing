@@ -18,6 +18,9 @@ const userLoginMessage = document.querySelector(".user-login-message");
 const dashboardShell = document.querySelector(".dashboard-shell");
 const logoutButtons = document.querySelectorAll(".auth-logout");
 const adminSearch = document.querySelector(".admin-search");
+const adminSearchId = document.querySelector(".admin-search-id");
+const adminSearchName = document.querySelector(".admin-search-name");
+const adminSearchPhone = document.querySelector(".admin-search-phone");
 const adminExport = document.querySelector(".admin-export");
 const adminEmpty = document.querySelector(".admin-empty");
 const adminSmmEmpty = document.querySelector(".admin-smm-empty");
@@ -235,13 +238,32 @@ logoutButtons.forEach((button) => {
 });
 
 if (adminOrders || adminSmmOrders) {
-  const renderOrders = (filter = "") => {
-    const query = filter.trim().toLowerCase();
+  const getAdminFilters = () => ({
+    all: (adminSearch?.value || "").trim().toLowerCase(),
+    id: (adminSearchId?.value || "").trim().toLowerCase(),
+    name: (adminSearchName?.value || "").trim().toLowerCase(),
+    phone: (adminSearchPhone?.value || "").trim().toLowerCase()
+  });
+
+  const matchesAdminFilters = (order, filters) => {
+    const allText = Object.values(order).join(" ").toLowerCase();
+    const idText = String(order.id || "").toLowerCase();
+    const nameText = String(order.name || "").toLowerCase();
+    const phoneText = String(order.phone || "").toLowerCase();
+
+    return (!filters.all || allText.includes(filters.all)) &&
+      (!filters.id || idText.includes(filters.id)) &&
+      (!filters.name || nameText.includes(filters.name)) &&
+      (!filters.phone || phoneText.includes(filters.phone));
+  };
+
+  const renderOrders = () => {
+    const filters = getAdminFilters();
     const orders = getServiceOrders().filter((order) =>
-      Object.values(order).join(" ").toLowerCase().includes(query)
+      matchesAdminFilters(order, filters)
     );
     const smmAdminOrders = getSmmOrders().filter((order) =>
-      Object.values(order).join(" ").toLowerCase().includes(query)
+      matchesAdminFilters(order, filters)
     );
 
     if (adminOrders) {
@@ -288,9 +310,11 @@ if (adminOrders || adminSmmOrders) {
 
   renderOrders();
 
-  if (adminSearch) {
-    adminSearch.addEventListener("input", () => renderOrders(adminSearch.value));
-  }
+  [adminSearch, adminSearchId, adminSearchName, adminSearchPhone].forEach((input) => {
+    if (input) {
+      input.addEventListener("input", renderOrders);
+    }
+  });
 
   if (adminExport) {
     adminExport.addEventListener("click", () => {
