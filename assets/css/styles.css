@@ -815,6 +815,202 @@ h2 {
   border-radius: 999px;
 }
 
+.dashboard-shell {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  align-items: start;
+  min-height: calc(100vh - 72px);
+  background: #fffdf2;
+}
+
+.dashboard-sidebar {
+  position: sticky;
+  top: 72px;
+  display: grid;
+  gap: 8px;
+  min-height: calc(100vh - 72px);
+  padding: 24px 16px;
+  color: var(--white);
+  background: #050505;
+  border-right: 1px solid rgba(248, 195, 0, 0.22);
+}
+
+.dashboard-sidebar strong {
+  display: block;
+  margin-bottom: 14px;
+  color: var(--orange);
+  font-size: 1.1rem;
+}
+
+.dashboard-sidebar a {
+  padding: 11px 12px;
+  color: rgba(255, 255, 255, 0.78);
+  font-weight: 900;
+  border: 1px solid rgba(248, 195, 0, 0.18);
+  border-radius: 8px;
+}
+
+.dashboard-sidebar a:hover {
+  color: var(--ink);
+  background: var(--orange);
+}
+
+.dashboard-main {
+  display: grid;
+  gap: 22px;
+  padding: clamp(20px, 4vw, 42px);
+}
+
+.dashboard-hero {
+  padding: clamp(22px, 4vw, 38px);
+  color: var(--white);
+  background:
+    radial-gradient(circle at 80% 10%, rgba(248, 195, 0, 0.26), transparent 30%),
+    linear-gradient(135deg, #050505, #1e1a05 70%);
+  border-radius: 8px;
+}
+
+.dashboard-hero .section-kicker {
+  color: var(--orange);
+}
+
+.dashboard-hero h1 {
+  max-width: 780px;
+  margin: 0 0 14px;
+  font-size: clamp(1.8rem, 3.6vw, 3.6rem);
+  line-height: 1.02;
+}
+
+.dashboard-hero p:not(.section-kicker) {
+  max-width: 680px;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.74);
+}
+
+.dashboard-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.dashboard-stats article,
+.smm-help-card,
+.services-table-section,
+.smm-orders-section,
+.smm-order-form {
+  padding: 20px;
+  background: var(--white);
+  border: 1px solid rgba(248, 195, 0, 0.28);
+  border-radius: 8px;
+  box-shadow: 0 18px 42px rgba(16, 24, 39, 0.07);
+}
+
+.dashboard-stats article {
+  display: grid;
+  gap: 4px;
+}
+
+.dashboard-stats span,
+.dashboard-stats small {
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.dashboard-stats strong {
+  color: #c1121f;
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  line-height: 1;
+}
+
+.smm-panel-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(230px, 0.34fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.smm-order-form {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.smm-order-form .section-heading,
+.smm-order-form .full-field,
+.smm-order-form button,
+.smm-message {
+  grid-column: 1 / -1;
+}
+
+.smm-order-form label {
+  display: grid;
+  gap: 7px;
+  color: #202938;
+  font-size: 0.86rem;
+  font-weight: 900;
+}
+
+.smm-order-form input,
+.smm-order-form select,
+.smm-order-form textarea {
+  width: 100%;
+  min-height: 42px;
+  padding: 0 12px;
+  color: var(--ink);
+  font: inherit;
+  background: #fffdf2;
+  border: 1px solid rgba(16, 24, 39, 0.16);
+  border-radius: 8px;
+  outline: 0;
+}
+
+.smm-order-form textarea {
+  min-height: 92px;
+  padding: 12px;
+  resize: vertical;
+}
+
+.smm-order-form button {
+  min-height: 44px;
+  color: var(--ink);
+  font-weight: 900;
+  background: var(--orange);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.smm-message {
+  min-height: 22px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.smm-help-card {
+  display: grid;
+  gap: 16px;
+}
+
+.smm-help-card h2 {
+  margin: 0;
+  font-size: 1.45rem;
+}
+
+.smm-help-card ol {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding-left: 20px;
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.services-table-section,
+.smm-orders-section {
+  overflow: hidden;
+}
+
 .online-services-panel {
   margin-top: 46px;
   padding: clamp(22px, 3vw, 32px);
@@ -1570,8 +1766,20 @@ h2 {
   .hero-section,
   .intro-band,
   .growth-section,
-  .newsletter-section {
+  .newsletter-section,
+  .dashboard-shell,
+  .smm-panel-grid {
     grid-template-columns: 1fr;
+  }
+
+  .dashboard-sidebar {
+    position: static;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    min-height: auto;
+  }
+
+  .dashboard-sidebar strong {
+    grid-column: 1 / -1;
   }
 
   .promo-banner {
@@ -1656,6 +1864,8 @@ h2 {
   .feature-grid,
   .service-grid,
   .pricing-grid,
+  .dashboard-stats,
+  .smm-order-form,
   .detail-grid,
   .purchase-layout,
   .process-grid,

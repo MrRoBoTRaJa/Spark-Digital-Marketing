@@ -11,7 +11,19 @@ const adminSearch = document.querySelector(".admin-search");
 const adminExport = document.querySelector(".admin-export");
 const adminClear = document.querySelector(".admin-clear");
 const adminEmpty = document.querySelector(".admin-empty");
+const smmOrderForm = document.querySelector(".smm-order-form");
+const smmMessage = document.querySelector(".smm-message");
+const smmOrders = document.querySelector(".smm-orders");
+const smmEmpty = document.querySelector(".smm-empty");
 const ORDER_KEY = "sparkServiceRequests";
+const SMM_ORDER_KEY = "sparkSmmOrders";
+const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (char) => ({
+  "&": "&amp;",
+  "<": "&lt;",
+  ">": "&gt;",
+  "\"": "&quot;",
+  "'": "&#39;"
+}[char]));
 
 if (menuButton && mainNav) {
   menuButton.addEventListener("click", () => {
@@ -152,3 +164,54 @@ if (adminOrders) {
     });
   }
 }
+
+if (smmOrderForm && smmMessage) {
+  smmOrderForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const formData = new FormData(smmOrderForm);
+    const orders = JSON.parse(localStorage.getItem(SMM_ORDER_KEY) || "[]");
+    const order = {
+      id: Date.now(),
+      date: new Date().toLocaleString(),
+      name: formData.get("smmName"),
+      phone: formData.get("smmPhone"),
+      category: formData.get("smmCategory"),
+      service: formData.get("smmService"),
+      link: formData.get("smmLink"),
+      quantity: formData.get("smmQuantity"),
+      payment: formData.get("smmPayment"),
+      notes: formData.get("smmNotes") || "Not provided"
+    };
+
+    orders.unshift(order);
+    localStorage.setItem(SMM_ORDER_KEY, JSON.stringify(orders));
+    smmMessage.textContent = "SMM order saved. Send payment screenshot and order details on WhatsApp.";
+    smmOrderForm.reset();
+    renderSmmOrders();
+  });
+}
+
+const renderSmmOrders = () => {
+  if (!smmOrders) {
+    return;
+  }
+
+  const orders = JSON.parse(localStorage.getItem(SMM_ORDER_KEY) || "[]");
+  smmOrders.innerHTML = orders.map((order) => `
+    <tr>
+      <td>${escapeHtml(order.date)}</td>
+      <td>${escapeHtml(order.name)}</td>
+      <td>${escapeHtml(order.phone)}</td>
+      <td>${escapeHtml(order.category)} - ${escapeHtml(order.service)}</td>
+      <td>${escapeHtml(order.quantity)}</td>
+      <td>${escapeHtml(order.payment)}</td>
+      <td><a href="${escapeHtml(order.link)}" target="_blank" rel="noopener">Open</a></td>
+    </tr>
+  `).join("");
+
+  if (smmEmpty) {
+    smmEmpty.classList.toggle("is-visible", orders.length === 0);
+  }
+};
+
+renderSmmOrders();
