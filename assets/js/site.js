@@ -69,6 +69,10 @@ const defaultSiteSettings = {
   heroLine1: "Add spark",
   heroLine2: "to your Business",
   heroLead: "Your trusted source for SMM, SEO, promotional services, advertising, website designing, online services, and affordable digital growth plans.",
+  homeTrustedKicker: "Trusted services for growing brands",
+  homeIntroKicker: "Creative digital team at your service",
+  homeIntroTitle: "We add spark to your business with practical online growth.",
+  homeIntroText: "We help businesses grow through social media marketing, search engine optimization, paid ads, website designing, promotional campaigns, online services, and strong online visibility.",
   promoEnabled: "yes",
   promoTag: "Trending Service",
   promoTitle: "Social Media Campaign",
@@ -80,7 +84,52 @@ const defaultSiteSettings = {
   phone2: "+91 8227028000",
   whatsapp: "919113373565",
   address: "Opp Smart Bazar, Mainroad, Ranchi - 834001 Jharkhand",
-  footerTagline: "Add spark to your Business."
+  footerTagline: "Add spark to your Business.",
+  aboutKicker: "About Us",
+  aboutTitle: "Creative digital team at your service.",
+  aboutLead: "We add spark to your business with practical online growth, clean design, and digital promotion support.",
+  servicesKicker: "All Services",
+  servicesTitle: "Complete online services for your business growth.",
+  servicesLead: "Choose any service, check starting price, and send a direct enquiry on WhatsApp.",
+  panelsKicker: "Panels",
+  panelsTitle: "Simple business panels to manage work faster.",
+  panelsLead: "We create clean admin panels, customer request panels, service dashboards, and internal tools for businesses that want organized digital work.",
+  dashboardKicker: "SMM Panel",
+  dashboardTitle: "Social media service dashboard for quick orders.",
+  dashboardLead: "Choose a service, enter your profile or post link, add quantity, then send the request with payment screenshot on WhatsApp.",
+  resultsKicker: "Results",
+  resultsTitle: "Clear process, better visibility, stronger response.",
+  resultsLead: "We focus on practical improvements that help people find, trust, and contact your business.",
+  contactKicker: "Contact Us",
+  contactTitle: "Tell us what you want to promote or complete online.",
+  contactLead: "Call, WhatsApp, email, or submit your details. We will contact you with the right plan.",
+  loginKicker: "Account Access",
+  loginTitle: "Login to your dashboard.",
+  loginLead: "User login opens SMM order dashboard. Admin login opens the full admin console.",
+  adminKicker: "Admin Console",
+  adminTitle: "Customer and panel requests.",
+  adminLead: "Requests submitted from online service forms and SMM panel forms appear here on this browser. Export CSV regularly for backup.",
+  onlineServicesKicker: "Online Services",
+  onlineServicesTitle: "All common online work from one place.",
+  onlineServicesLead: "We help with online forms, applications, document upload, payments, profiles, and digital support work.",
+  websiteDevelopmentKicker: "Website Development",
+  websiteDevelopmentTitle: "Clean website for your business.",
+  websiteDevelopmentLead: "We make responsive websites that look professional, explain your services clearly, and help customers contact you easily.",
+  appDevelopmentKicker: "App Development",
+  appDevelopmentTitle: "Mobile app support for your idea.",
+  appDevelopmentLead: "We help you plan, design, and promote a simple business app with clear screens and useful features.",
+  digitalMarketingKicker: "Digital Marketing",
+  digitalMarketingTitle: "Promotion that reaches the right people.",
+  digitalMarketingLead: "We plan simple and practical campaigns for awareness, enquiries, followers, and business growth.",
+  websiteMaintenanceKicker: "Website Maintenance",
+  websiteMaintenanceTitle: "Keep your website fresh and working.",
+  websiteMaintenanceLead: "We update your website content, check basic issues, and keep important information correct.",
+  graphicDesignKicker: "Graphic Design",
+  graphicDesignTitle: "Creative design for your brand.",
+  graphicDesignLead: "We design clean and attractive visuals for social media, ads, banners, and business promotion.",
+  domainHostingKicker: "Domain & Hosting",
+  domainHostingTitle: "Setup support for your website launch.",
+  domainHostingLead: "We help with domain, hosting, SSL, business email, and basic website launch requirements."
 };
 
 const getSiteSettings = () => ({
@@ -93,6 +142,27 @@ const digitsOnly = (value) => String(value || "").replace(/\D/g, "");
 
 const applySiteSettings = () => {
   const settings = getSiteSettings();
+  const setText = (selector, value) => {
+    const element = document.querySelector(selector);
+    if (element) element.textContent = value;
+  };
+  const pageName = (window.location.pathname.split("/").pop() || "index.html").replace(".html", "") || "index";
+  const pageHeroKeys = {
+    about: "about",
+    services: "services",
+    panels: "panels",
+    results: "results",
+    contact: "contact",
+    login: "login",
+    admin: "admin",
+    "online-services": "onlineServices",
+    "website-development": "websiteDevelopment",
+    "app-development": "appDevelopment",
+    "digital-marketing": "digitalMarketing",
+    "website-maintenance": "websiteMaintenance",
+    "graphic-design": "graphicDesign",
+    "domain-hosting": "domainHosting"
+  };
   const heroEyebrow = document.querySelector(".hero-copy .eyebrow");
   const heroLine1 = document.querySelector(".hero-copy h1 span:first-child");
   const heroLine2 = document.querySelector(".hero-copy h1 span:last-child");
@@ -107,6 +177,24 @@ const applySiteSettings = () => {
   if (heroLine1) heroLine1.textContent = settings.heroLine1;
   if (heroLine2) heroLine2.textContent = settings.heroLine2;
   if (heroLead) heroLead.textContent = settings.heroLead;
+  setText(".trusted-section > .section-kicker", settings.homeTrustedKicker);
+  setText(".intro-content .section-kicker", settings.homeIntroKicker);
+  setText(".intro-content h2", settings.homeIntroTitle);
+  setText(".intro-content p:not(.section-kicker)", settings.homeIntroText);
+
+  const pageKey = pageHeroKeys[pageName];
+  if (pageKey) {
+    setText(".page-hero .section-kicker", settings[`${pageKey}Kicker`]);
+    setText(".page-hero h1", settings[`${pageKey}Title`]);
+    setText(".page-hero p:not(.section-kicker)", settings[`${pageKey}Lead`]);
+  }
+
+  if (pageName === "dashboard") {
+    setText(".dashboard-hero .section-kicker", settings.dashboardKicker);
+    setText(".dashboard-hero h1", settings.dashboardTitle);
+    setText(".dashboard-hero p:not(.section-kicker)", settings.dashboardLead);
+  }
+
   if (promoTag) promoTag.textContent = settings.promoTag;
   if (promoTitle) promoTitle.textContent = settings.promoTitle;
   if (promoText) promoText.textContent = settings.promoText;
@@ -389,9 +477,9 @@ if (siteControlForm) {
     sparkDbReady.then((db) => db?.saveSiteSettings(settings)).catch(() => {});
     applySiteSettings();
     if (controlMessage) {
-      controlMessage.textContent = "Website settings saved in this browser.";
+      controlMessage.textContent = "Website settings saved. Firebase will share it across devices when Firestore is enabled.";
     }
-    showSuccessPopup("Website settings saved", "CONTROL-SAVED", "Your common website settings have been updated on this browser.");
+    showSuccessPopup("Website settings saved", "CONTROL-SAVED", "Your website settings have been updated.");
   });
 
   if (controlReset) {

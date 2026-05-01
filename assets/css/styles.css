@@ -1762,6 +1762,28 @@ h2 {
   font-size: clamp(1.35rem, 2.2vw, 2rem);
 }
 
+.control-page-block {
+  display: grid;
+  grid-template-columns: minmax(150px, 0.32fr) minmax(0, 0.68fr);
+  gap: 12px;
+  padding: 16px;
+  background: #fffdf2;
+  border: 1px solid rgba(248, 195, 0, 0.28);
+  border-radius: 8px;
+}
+
+.control-page-block h3 {
+  grid-row: span 3;
+  margin: 0;
+  color: var(--ink);
+  font-size: 1rem;
+  line-height: 1.25;
+}
+
+.control-page-block label {
+  min-width: 0;
+}
+
 .site-control-form label {
   display: grid;
   gap: 7px;
@@ -2362,6 +2384,7 @@ h2 {
   .dashboard-stats,
   .auth-page-section,
   .site-control-form,
+  .control-page-block,
   .smm-order-form,
   .detail-grid,
   .purchase-layout,
@@ -2394,5 +2417,9 @@ h2 {
 
   .admin-toolbar {
     grid-template-columns: 1fr;
+  }
+
+  .control-page-block h3 {
+    grid-row: auto;
   }
 }
